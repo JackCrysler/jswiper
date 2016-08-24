@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <title>Document</title>
+    <style>
+        html,body{
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+        }
+        ul,li{
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .Jswiper{
+            position: relative;
+            width: 100%;
+            min-height: 130px;
+            overflow: hidden;
+        }
+        .Jswiper-wrap{
+            position: absolute;
+        }
+        .Jswiper-item{
+            float: left;
+            min-height: 130px;
+            background: lightgoldenrodyellow;
+        }
+
+        .tst{
+            transition:transform .3s ease-in-out;
+            -webkit-transition:transform .3s ease-in-out;
+        }
+
+        .swiper-dot{
+            display: inline-block;
+            width: 7px;
+            height: 7px;
+            margin: 5px;
+            border-radius: 50%;
+            background: lightcyan;
+
+        }
+        .swiper-dot.active{
+            background: lightgreen;
+        }
+        .self-dots{
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translate3d(-50%,0,0);
+        }
+
+        .active{
+            color: #f00;
+        }
+    </style>
+</head>
+<body>
+<div class="pics Jswiper none">
+    <ul class="Jswiper-wrap tst">
+        <li class="Jswiper-item" dsrc="" style="background: lightseagreen;"></li>
+        <li class="Jswiper-item" dsrc="" style="background: lightsalmon;"></li>
+        <li class="Jswiper-item" dsrc="" style="background: lightcoral;"></li>
+
+    </ul>
+    <div class="self-dots"></div>
+</div>
+<div class="nav-dots" style="background: #eee;height: 50px;">
+    <span idx="0" style="line-height:50px;text-align:center;display: inline-block;width: 50px;height: 50px;">1</span>
+    <span idx="1" style="line-height:50px;text-align:center;display: inline-block;width: 50px;height: 50px;">2</span>
+    <span idx="2" style="line-height:50px;text-align:center;display: inline-block;width: 50px;height: 50px;">3</span>
+</div>
+<script src="jswiper.js"></script>
+
+<script>
+    var J = new Jswiper('.pics',{
+        callback:function(idx){
+            console.log(idx)
+        },
+        navWrapClass:'.self-dots'
+    });
+    document.querySelector('.nav-dots').addEventListener('click',function(e){
+        e.stopPropagation();
+        var target = (e || event).target;
+        if(target.getAttribute('idx')){
+
+            J.moveTo(target.getAttribute('idx'));
+        }
+    },false)
+
+</script>
+</body>
+</html>
