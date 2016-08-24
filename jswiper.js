@@ -80,12 +80,12 @@ Jswiper.prototype = {
 
     }(),
     bindEvent:function(){
-        var that = this;
         this.histSpan = 0;
-        var startTime,endTime,timeSpan;
+        var startTime,endTime,timeSpan,that = this;
 
         this.itemsWrap.addEventListener('touchstart',function(e){
             that.stopDefault(e);
+
             that.initX = e.touches[0].clientX;
             that.initY = e.touches[0].clientY;
             that.itemsWrap.className = that.itemsWrap.className.replace('tst','').replace(/(^\s+|\s+$)/,'');
@@ -103,11 +103,13 @@ Jswiper.prototype = {
 
             if(Math.abs(that.spanY)<Math.abs(that.spanX)){
                 //最后一张或者第一张阻止相应的滑动
-                if(that.spanX >0 && that.index== 0 || that.spanX<0 && that.index == (that.len-1)) return;
+                if(that.spanX >0 && that.index== 0 || that.spanX<0 && that.index == (that.len-1)) {
+                    return;
+                }
                 //跟随滑动
                 that.itemsWrap.style.transform = 'translate3d('+(that.spanX+that.histSpan)+'px,0,0)';
             }else{
-                console.log('垂直方向的移动')
+                console.log('vertical move')
             }
         },false);
         this.itemsWrap.addEventListener('touchend',function(e){
@@ -116,7 +118,19 @@ Jswiper.prototype = {
             timeSpan = endTime- startTime;
 
             if(timeSpan<300 && timeSpan>10 || Math.abs(that.spanX)>that.winWidth/3){
-                direction();
+                if(that.spanX>0){
+                    that.index--;
+                    if(that.index<0){
+                        that.index=0
+                    }
+                    that.direction = 'right';
+                }else{
+                    that.index++;
+                    if(that.index>=that.len){
+                        that.index = that.len-1;
+                    }
+                    that.direction = 'left';
+                }
             }
 
             that.itemsWrap.className = that.itemsWrap.className+' tst';
@@ -129,27 +143,14 @@ Jswiper.prototype = {
         this.itemsWrap.addEventListener(this.transitionEnd,function(){
             //记录图片的滑动位置
             that.histSpan = getComputedStyle(that.itemsWrap).transform.split(',')[4]*1;
+            //滑动结束
+
             //执行回调
             that.callback(that.index);
             //检查配置项，圆点功能
             !!that.options.navWrapClass && that.changeDotsActive(that.index);
         },false);
 
-        function direction() {
-            if(that.spanX>0){
-                that.index--;
-                if(that.index<0){
-                    that.index=0
-                }
-                that.direction = 'right';
-            }else{
-                that.index++;
-                if(that.index>=that.len){
-                    that.index = that.len-1;
-                }
-                that.direction = 'left';
-            }
-        }
     },
     moveTo:function(idx){
         if(idx === undefined){
