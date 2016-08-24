@@ -1,3 +1,4 @@
+'use strict';
 var Jswiper = function(cls,options) {
     this.win = document.querySelector(cls);
     this.itemsWrap = this.win.querySelector('.Jswiper-wrap');
@@ -19,11 +20,13 @@ Jswiper.prototype = {
         this.winWidth = this.win.offsetWidth;
         this.itemsWrap.style.width = this.winWidth*this.len+'px';
         var that = this;
-        this.item.forEach(function(v,i){
-            v.style.width = that.winWidth+'px';
-            (v.getAttribute('dsrc') != '') && (v.style.background = 'url("'+v.getAttribute('dsrc')+'")');
-            v.style.backgroundSize = 'cover';
-        })
+        for(var i=0; i<this.len; i++){
+            this.item[i].style.width = that.winWidth+'px';
+            (this.item[i].getAttribute('dsrc') != '') && (this.item[i].style.background = 'url("'+this.item[i].getAttribute('dsrc')+'")');
+            this.item[i].style.backgroundSize = 'cover';
+        }
+
+        this.index = 0;
     },
     setNavDots:function(cls){
         var dom =  this.dots = document.querySelector(cls), str = '';
@@ -79,12 +82,14 @@ Jswiper.prototype = {
     bindEvent:function(){
         var that = this;
         this.histSpan = 0;
-        this.index = 0;
+        var startTime,endTime,timeSpan;
+
         this.itemsWrap.addEventListener('touchstart',function(e){
             that.stopDefault(e);
             that.initX = e.touches[0].clientX;
             that.initY = e.touches[0].clientY;
             that.itemsWrap.className = that.itemsWrap.className.replace('tst','').replace(/(^\s+|\s+$)/,'');
+            startTime = new Date().getTime();
         },false);
 
         this.itemsWrap.addEventListener('touchmove',function(e){
@@ -106,21 +111,12 @@ Jswiper.prototype = {
             }
         },false);
         this.itemsWrap.addEventListener('touchend',function(e){
+            endTime = new Date().getTime();
 
-            if(Math.abs(that.spanX)>that.winWidth/3){
-                if(that.spanX>0){
-                    that.direction = 'right';
-                    that.index--;
-                    if(that.index<0){
-                        that.index=0
-                    }
-                }else{
-                    that.direction = 'left';
-                    that.index++;
-                    if(that.index>=that.len){
-                        that.index = that.len-1;
-                    }
-                }
+            timeSpan = endTime- startTime;
+
+            if(timeSpan<300 && timeSpan>10 || Math.abs(that.spanX)>that.winWidth/3){
+                direction();
             }
 
             that.itemsWrap.className = that.itemsWrap.className+' tst';
@@ -137,11 +133,27 @@ Jswiper.prototype = {
             that.callback(that.index);
             //检查配置项，圆点功能
             !!that.options.navWrapClass && that.changeDotsActive(that.index);
-        },false)
+        },false);
+
+        function direction() {
+            if(that.spanX>0){
+                that.index--;
+                if(that.index<0){
+                    that.index=0
+                }
+                that.direction = 'right';
+            }else{
+                that.index++;
+                if(that.index>=that.len){
+                    that.index = that.len-1;
+                }
+                that.direction = 'left';
+            }
+        }
     },
     moveTo:function(idx){
         if(idx === undefined){
-            console.error('方法入参为:'+idx+'.  \nmoveTo函数需要传入数字类型参数.');
+            console.error('该函数入参为: '+idx+' \n moveTo函数需要传入数字类型参数.');
             return;
         }
         this.itemsWrap.style.transform = 'translate3d('+(-this.winWidth*idx)+'px,0,0)';
