@@ -4,13 +4,22 @@ var Jswiper = function(cls,options) {
     this.itemsWrap = this.win.querySelector('.Jswiper-wrap');
     this.item = this.itemsWrap.querySelectorAll('.Jswiper-item');
     this.len = this.item.length;
+    this.stopMove = false;
+    this.options = options;
     this.init();
     this.bindEvent();
+
 
     this.callback = !!options.callback ? options.callback : function (index) {
         console.log(index);
     };
-    this.options = options;
+    this.beforeSwipe = options.beforeSwipe || function(e){
+        console.log(e);
+    };
+    this.afterSwipe = options.afterSwipe || function(e){
+
+    };
+
     if(options.navWrapClass){
         this.setNavDots(options.navWrapClass)
     }
@@ -85,7 +94,8 @@ Jswiper.prototype = {
 
         this.itemsWrap.addEventListener('touchstart',function(e){
             that.stopDefault(e);
-
+            !!that.beforeSwipe && that.beforeSwipe(e);
+            if(that.stopMove) return;
             that.initX = e.touches[0].clientX;
             that.initY = e.touches[0].clientY;
             that.itemsWrap.className = that.itemsWrap.className.replace('tst','').replace(/(^\s+|\s+$)/,'');
@@ -94,7 +104,7 @@ Jswiper.prototype = {
 
         this.itemsWrap.addEventListener('touchmove',function(e){
             that.stopDefault(e);
-
+            if(that.stopMove) return;
             that.moveX = e.touches[0].clientX;
             that.moveY = e.touches[0].clientY;
 
@@ -113,11 +123,12 @@ Jswiper.prototype = {
             }
         },false);
         this.itemsWrap.addEventListener('touchend',function(e){
+            if(that.stopMove) return;
             endTime = new Date().getTime();
 
             timeSpan = endTime- startTime;
 
-            if(timeSpan<300 && timeSpan>10 || Math.abs(that.spanX)>that.winWidth/3){
+            if(timeSpan<300 && timeSpan>10 && Math.abs(that.spanX)>10 || Math.abs(that.spanX)>that.winWidth/3){
                 if(that.spanX>0){
                     that.index--;
                     if(that.index<0){
@@ -133,8 +144,13 @@ Jswiper.prototype = {
                 }
             }
 
+            //重置
+            timeSpan = 0;
+            that.spanX = 0;
+            that.spanY = 0;
+            //添加过渡transition类
             that.itemsWrap.className = that.itemsWrap.className+' tst';
-
+            //移动方法
             that.moveTo(that.index);
             //记录图片的滑动位置
             that.histSpan = getComputedStyle(that.itemsWrap).transform.split(',')[4]*1;
@@ -143,12 +159,13 @@ Jswiper.prototype = {
         this.itemsWrap.addEventListener(this.transitionEnd,function(){
             //记录图片的滑动位置
             that.histSpan = getComputedStyle(that.itemsWrap).transform.split(',')[4]*1;
-            //滑动结束
-
+            //滑动结束的回调
+            !!that.afterSwipe && that.afterSwipe();
             //执行回调
             that.callback(that.index);
             //检查配置项，圆点功能
             !!that.options.navWrapClass && that.changeDotsActive(that.index);
+
         },false);
 
     },

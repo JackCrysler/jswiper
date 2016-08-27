@@ -9,8 +9,7 @@
         html,body{
             margin: 0;
             padding: 0;
-            width: 100%;
-            height: 100%;
+
         }
         ul,li{
             list-style: none;
@@ -54,6 +53,7 @@
             bottom: 10px;
             left: 50%;
             transform: translate3d(-50%,0,0);
+            pointer-events: none;
         }
 
         .active{
@@ -82,13 +82,16 @@
         callback:function(idx){
             console.log(idx)
         },
-        navWrapClass:'.self-dots'
+        navWrapClass:'.self-dots',
+        beforeSwipe:function(e){
+            this.stopMove = false;//值为true时可阻止swipe组件的移动
+        },
+        afterSwipe:function(){}
     });
     document.querySelector('.nav-dots').addEventListener('click',function(e){
         e.stopPropagation();
         var target = (e || event).target;
         if(target.getAttribute('idx')){
-
             J.moveTo(target.getAttribute('idx'));
         }
     },false)
