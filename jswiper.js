@@ -1,20 +1,22 @@
 'use strict';
 var Jswiper = function(cls,options) {
+    this.options = options;
     this.win = document.querySelector(cls);
-    this.itemsWrap = this.win.querySelector('.Jswiper-wrap');
-    this.item = this.itemsWrap.querySelectorAll('.Jswiper-item');
+    this.itemsWrap = this.win.querySelector(options.itemWrapClass||'.Jswiper-wrap');
+
+    this.item = this.itemsWrap.querySelectorAll(options.itemClass||'.Jswiper-item');
     this.len = this.item.length;
     this.stopMove = false;
-    this.options = options;
+
     this.init();
     this.bindEvent();
 
 
     this.callback = !!options.callback ? options.callback : function (index) {
-        console.log(index);
+        //console.log(index);
     };
     this.beforeSwipe = options.beforeSwipe || function(e){
-        console.log(e);
+
     };
     this.afterSwipe = options.afterSwipe || function(e){
 
@@ -27,10 +29,13 @@ var Jswiper = function(cls,options) {
 Jswiper.prototype = {
     init:function(){
         this.winWidth = this.win.offsetWidth;
+        this.itemsWrap.style.position = 'absolute';
         this.itemsWrap.style.width = this.winWidth*this.len+'px';
+
         var that = this;
         for(var i=0; i<this.len; i++){
             this.item[i].style.width = that.winWidth+'px';
+            this.item[i].style.float = 'left';
             (this.item[i].getAttribute('dsrc') != '') && (this.item[i].style.background = 'url("'+this.item[i].getAttribute('dsrc')+'")');
             this.item[i].style.backgroundSize = 'cover';
         }
@@ -149,7 +154,9 @@ Jswiper.prototype = {
             that.spanX = 0;
             that.spanY = 0;
             //添加过渡transition类
-            that.itemsWrap.className = that.itemsWrap.className+' tst';
+            if(that.itemsWrap.className.indexOf('tst')==-1){
+                that.itemsWrap.className = that.itemsWrap.className+' tst';
+            }
             //移动方法
             that.moveTo(that.index);
             //记录图片的滑动位置
@@ -160,7 +167,7 @@ Jswiper.prototype = {
             //记录图片的滑动位置
             that.histSpan = getComputedStyle(that.itemsWrap).transform.split(',')[4]*1;
             //滑动结束的回调
-            !!that.afterSwipe && that.afterSwipe();
+            !!that.afterSwipe && that.afterSwipe(that.index);
             //执行回调
             that.callback(that.index);
             //检查配置项，圆点功能
