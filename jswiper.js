@@ -69,6 +69,7 @@ Jswiper.prototype = {
         if (e && e.preventDefault) {
             //e.preventDefault();
             e.stopPropagation();
+            e.stopImmediatePropagation();
         } else  {
             window.event.returnValue = false;
             e.cancelBubble = true;
@@ -164,6 +165,7 @@ Jswiper.prototype = {
 
         },false);
         this.itemsWrap.addEventListener(this.transitionEnd,function(){
+            if(that.stopMove) return;
             //记录图片的滑动位置
             that.histSpan = getComputedStyle(that.itemsWrap).transform.split(',')[4]*1;
             //滑动结束的回调
