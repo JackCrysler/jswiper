@@ -1,6 +1,6 @@
 # jswiper
-a simple swiper javascript work
+直接使用simple版本
 
-swiper.js直接忽略
+忽略swiper.js（太复杂，不好用）；
 
-请直接使用simple版本
+
