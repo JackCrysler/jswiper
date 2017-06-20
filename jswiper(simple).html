@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        *{
+            padding: 0;
+            margin: 0;
+        }
+        html,body{
+            width: 100%;
+            height: 100%;
+        }
+        .swiper-container{
+            width: 100%;
+            height: 140px;
+            overflow: hidden;
+        }
+        .swiper-wrapper{
+            display: flex;
+            width: 100%;
+            height: 100%;
+        }
+        .swiper-slide{
+            flex-shrink: 0;
+            width: 100%;
+            height: 100%;
+        }
+        .slide1{
+            background: lightcoral;
+        }
+        .slide2{
+            background: #d000f0;
+        }
+        .slide3{
+            background: #4d50f0;
+        }
+        .tst{
+            transition: transform 0.3s ease-in-out;
+        }
+    </style>
+</head>
+<body>
+<div class="swiper-container swiper1">
+    <div class="swiper-wrapper tst">
+        <div class="swiper-slide slide1"></div>
+        <div class="swiper-slide slide2"></div>
+        <div class="swiper-slide slide3"></div>
+    </div>
+</div>
+<script>
+    var JSwiper = function (selector,options) {
+         this.el= typeof selector == 'string'?document.querySelector(selector):selector;
+         this.wrapper = this.el.children[0];
+         this.index = 0;
+         this.count = this.wrapper.querySelectorAll('.swiper-slide').length;
+         this.roadway = this.el.offsetWidth;
+         this.afterSlide = options.afterSlide;
+         this.bindEvent();
+    };
+    JSwiper.prototype = {
+        bindEvent:function () {
+            var index = this.index;
+            var count = this.count;
+            var el = this.el;
+            var wrapper = this.el.children[0];
+            var roadway =this.roadway;
+            var startx,movex,spanx,endx=0;
+
+            el.addEventListener('touchstart',function (e) {
+                spanx = 0;
+                wrapper.classList.remove('tst');
+                endx=-index*this.roadway;
+                startx = e.touches[0].pageX;
+            }.bind(this));
+            el.addEventListener('touchmove',function (e) {
+                movex = e.touches[0].pageX;
+
+                spanx =movex-startx;
+
+                if(index==0 || index == count-1) return;
+
+                wrapper.style.transform = 'translate3d('+ (endx + spanx)+'px,0,0)'
+
+            });
+            el.addEventListener('touchend',function () {
+                wrapper.classList.add('tst');
+
+                if(Math.abs(spanx)>roadway/3){
+
+                    if(spanx>0){
+                        //去往上一帧
+                        console.log('去往上一帧')
+                        index--;
+                        if(index<=0) index=0
+                    }
+                    if(spanx<0){
+                        //去下一帧
+                        console.log('去往下一帧')
+                        index++;
+                        if(index>=count) index=count-1
+                    }
+                }
+                this.index = index;
+                this.moveTo(index);
+            }.bind(this))
+        },
+        moveTo:function (index) {
+            this.wrapper.style.transform='translate3d('+(-index*this.roadway)+'px,0,0)'
+            this.afterSlide(index);
+        }
+    };
+
+    new JSwiper('.swiper1',{
+        afterSlide:function (index) {
+            console.log(index)
+        }
+    })
+</script>
+</body>
+</html>
