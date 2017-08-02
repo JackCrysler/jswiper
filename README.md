@@ -3,7 +3,11 @@
 
 使用方法
 
-    <code>
+    new JSwiper('className')
+
+    example:
+
+    <pre>
         
         new JSwiper('.swiper1',{
             afterSlide:function (index) {
@@ -17,7 +21,7 @@
             autoplay:true
         });
 
-    </code>    
+    </pre>    
     
 
 目前支持配置：
