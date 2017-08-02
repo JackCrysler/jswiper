@@ -1,7 +1,7 @@
 # JSwiper
 
 欢迎直接使用simple版本
-------------
+
 使用方法:
 
     example:
@@ -25,7 +25,7 @@
     
 
 目前支持配置：
-----------
+
     1.autoplay {number/boolean}
 
     2.direction {horizontal/vertical}
