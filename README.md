@@ -6,7 +6,7 @@
 
     example:
 
-    `
+    <code>
         new JSwiper('className')
         
         new JSwiper('.swiper1',{
@@ -21,7 +21,7 @@
             autoplay:true
         });
 
-    `    
+    </code>    
     
 
 目前支持配置：
