@@ -6,7 +6,7 @@
 
     example:
 
-    `<pre>
+    ```<pre>
         new JSwiper('className')
         
         new JSwiper('.swiper1',{
@@ -21,7 +21,7 @@
             autoplay:true
         });
 
-    </pre>`    
+    </pre>```    
     
 
 目前支持配置：
