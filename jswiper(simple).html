@@ -25,8 +25,9 @@ JSwiper.prototype = {
         var startx, movex, spanx, endx = 0;
 
         el.addEventListener('touchstart', function (e) {
+            index = this.index;
             if (this.timer) clearInterval(this.timer);
-
+            
             spanx = 0;
             wrapper.classList.remove('tst');
             endx = -index * this.roadway;
