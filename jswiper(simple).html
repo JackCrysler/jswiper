@@ -1,87 +1,66 @@
-var JSwiper = function (selector, options) {
-    this.el = typeof selector == 'string' ? document.querySelector(selector) : selector;
-    this.wrapper = this.el.children[0];
-    this.index = 0;
-    this.count = this.wrapper.querySelectorAll('.swiper-slide').length;
-    this.init(options);
-};
-JSwiper.prototype = {
-    init: function (options) {
-        this.roadway = this.el.offsetWidth;
-        this.afterSlide = options.afterSlide || function () { };
-        this.autoplay = options.autoplay || false;
-
-        if (this.autoplay) {
-            this.autoPlay()
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        *{
+            padding: 0;
+            margin: 0;
         }
-        this.bindEvent();
-    },
-    bindEvent: function () {
-        var index = this.index;
-        var count = this.count;
-        var el = this.el;
-        var wrapper = this.el.children[0];
-        var roadway = this.roadway;
-        var startx, movex, spanx, endx = 0;
+        html,body{
+            width: 100%;
+            height: 100%;
+        }
+        .swiper-container{
+            width: 100%;
+            height: 140px;
+            overflow: hidden;
+        }
+        .swiper-wrapper{
+            display: flex;
+            width: 100%;
+            height: 100%;
+        }
+        .swiper-slide{
+            flex-shrink: 0;
+            width: 100%;
+            height: 100%;
+        }
+        .slide1{
+            background: lightcoral;
+        }
+        .slide2{
+            background: #d000f0;
+        }
+        .slide3{
+            background: #4d50f0;
+        }
+        .tst{
+            transition: transform 0.3s ease-in-out;
+        }
+    </style>
+</head>
+<body>
+<div class="swiper-container swiper1">
+    <div class="swiper-wrapper tst">
+        <div class="swiper-slide slide1"></div>
+        <div class="swiper-slide slide2"></div>
+        <div class="swiper-slide slide3"></div>
+    </div>
+</div>
+<script src="JSwiper.Simple.js"></script>
+<script>
 
-        el.addEventListener('touchstart', function (e) {
-            index = this.index;
-            if (this.timer) clearInterval(this.timer);
-            
-            spanx = 0;
-            wrapper.classList.remove('tst');
-            endx = -index * this.roadway;
-            startx = e.touches[0].pageX;
-        }.bind(this));
-        el.addEventListener('touchmove', function (e) {
-            movex = e.touches[0].pageX;
-
-            spanx = movex - startx;
-
-            if (index == 0 && spanx > 0 || index == count - 1 && spanx < 0) return;
-
-            wrapper.style.transform = 'translate3d(' + (endx + spanx) + 'px,0,0)'
-
-        });
-        el.addEventListener('touchend', function () {
-            wrapper.classList.add('tst');
-
-            if (Math.abs(spanx) > roadway / 3) {
-
-                if (spanx > 0) {
-                    //去往上一帧
-                    console.log('去往上一帧')
-                    index--;
-                    if (index <= 0) index = 0
-                }
-                if (spanx < 0) {
-                    //去下一帧
-                    console.log('去往下一帧')
-                    index++;
-                    if (index >= count - 1) index = count - 1
-                }
-            }
-            this.index = index;
-            this.moveTo(index);
-        }.bind(this))
-    },
-    moveTo: function (index) {
-        this.wrapper.style.transform = 'translate3d(' + (-index * this.roadway) + 'px,0,0)'
-        this.afterSlide(index);
-    },
-    autoPlay: function () {
-        var index = this.index;
-        var time = typeof this.autoplay == 'number' ? this.autoplay : 3000;
-        var that = this;
-        this.wrapper.classList.add('tst');
-        this.timer = setInterval(function () {
-            index++;
-
-            if (index >= that.count) {
-                index = 0
-            }
-            that.index = index;
-            that.moveTo(index);
-        }, time)
-    }
-};
+    new JSwiper('.swiper1',{
+        afterSlide:function (index) {
+            console.log(index)
+        },
+        autoplay:3000
+    })
+</script>
+</body>
+</html>
