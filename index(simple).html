@@ -20,15 +20,31 @@
             height: 140px;
             overflow: hidden;
         }
+        .swiper-vertical{
+            flex-direction: column;
+        }
         .swiper-wrapper{
             display: flex;
             width: 100%;
             height: 100%;
         }
+
         .swiper-slide{
             flex-shrink: 0;
             width: 100%;
             height: 100%;
+        }
+        .tst{
+            transition: transform 0.3s ease-in-out;
+        }
+
+
+        /*user define css */
+        .slide1,.slide2,.slide3{
+            text-align: center;
+            font-size: 30px;
+            color: #fff;
+            line-height: 140px;
         }
         .slide1{
             background: lightcoral;
@@ -39,17 +55,26 @@
         .slide3{
             background: #4d50f0;
         }
-        .tst{
-            transition: transform 0.3s ease-in-out;
-        }
+        
     </style>
 </head>
 <body>
 <div class="swiper-container swiper1">
     <div class="swiper-wrapper tst">
-        <div class="swiper-slide slide1"></div>
-        <div class="swiper-slide slide2"></div>
-        <div class="swiper-slide slide3"></div>
+        <div class="swiper-slide slide1">1</div>
+        <div class="swiper-slide slide2">2</div>
+        <div class="swiper-slide slide3">3</div>
+        <div class="swiper-slide slide1">4</div>
+        <div class="swiper-slide slide2">5</div>
+        <div class="swiper-slide slide3">6</div>
+    </div>
+</div>
+<br>
+<div class="swiper-container swiper2">
+    <div class="swiper-wrapper tst">
+        <div class="swiper-slide slide1">1</div>
+        <div class="swiper-slide slide2">2</div>
+        <div class="swiper-slide slide3">3</div>
     </div>
 </div>
 <script src="JSwiper.Simple.js"></script>
@@ -60,7 +85,12 @@
             console.log(index)
         },
         autoplay:3000
-    })
+    });
+
+    new JSwiper('.swiper2',{
+        direction:'vertical',
+        autoplay:true
+    });
 </script>
 </body>
 </html>

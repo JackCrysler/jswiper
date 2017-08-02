@@ -3,14 +3,17 @@ var JSwiper = function (selector, options) {
     this.wrapper = this.el.children[0];
     this.index = 0;
     this.count = this.wrapper.querySelectorAll('.swiper-slide').length;
-    this.init(options);
+    this.init(options || {});
 };
 JSwiper.prototype = {
     init: function (options) {
-        this.roadway = this.el.offsetWidth;
         this.afterSlide = options.afterSlide || function () { };
         this.autoplay = options.autoplay || false;
-
+        this.direction = options.direction || 'horizontal';
+        this.roadway = this.direction==='horizontal'?this.el.offsetWidth:this.el.offsetHeight;
+        if(this.direction!=='horizontal'){
+            this.el.children[0].classList.add('swiper-vertical');
+        }
         if (this.autoplay) {
             this.autoPlay()
         }
@@ -22,39 +25,40 @@ JSwiper.prototype = {
         var el = this.el;
         var wrapper = this.el.children[0];
         var roadway = this.roadway;
-        var startx, movex, spanx, endx = 0;
+        var direction = this.direction;
+        var start, move, span, end = 0;
 
         el.addEventListener('touchstart', function (e) {
             index = this.index;
             if (this.timer) clearInterval(this.timer);
             
-            spanx = 0;
+            span = 0;
             wrapper.classList.remove('tst');
-            endx = -index * this.roadway;
-            startx = e.touches[0].pageX;
+            end = -index * this.roadway;
+            start = direction=='horizontal'?e.touches[0].pageX:e.touches[0].pageY;
         }.bind(this));
         el.addEventListener('touchmove', function (e) {
-            movex = e.touches[0].pageX;
+            move = direction=='horizontal'?e.touches[0].pageX:e.touches[0].pageY;
 
-            spanx = movex - startx;
+            span = move - start;
 
-            if (index == 0 && spanx > 0 || index == count - 1 && spanx < 0) return;
+            if (index == 0 && span > 0 || index == count - 1 && span < 0) return;
 
-            wrapper.style.transform = 'translate3d(' + (endx + spanx) + 'px,0,0)'
+            wrapper.style.transform = direction=='horizontal'?'translate3d(' + (end + span) + 'px,0,0)':'translate3d(0,' + (end + span) + 'px,0)'
 
         });
         el.addEventListener('touchend', function () {
             wrapper.classList.add('tst');
 
-            if (Math.abs(spanx) > roadway / 3) {
+            if (Math.abs(span) > roadway / 3) {
 
-                if (spanx > 0) {
+                if (span > 0) {
                     //去往上一帧
                     console.log('去往上一帧')
                     index--;
                     if (index <= 0) index = 0
                 }
-                if (spanx < 0) {
+                if (span < 0) {
                     //去下一帧
                     console.log('去往下一帧')
                     index++;
@@ -66,7 +70,7 @@ JSwiper.prototype = {
         }.bind(this))
     },
     moveTo: function (index) {
-        this.wrapper.style.transform = 'translate3d(' + (-index * this.roadway) + 'px,0,0)'
+        this.wrapper.style.transform = this.direction=='horizontal'?'translate3d(' + (-index * this.roadway) + 'px,0,0)':'translate3d(0,' + (-index * this.roadway) + 'px,0)'
         this.afterSlide(index);
     },
     autoPlay: function () {
