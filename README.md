@@ -1,12 +1,12 @@
 # JSwiper
-===========
+
 欢迎直接使用simple版本
 ------------
 使用方法:
 
     example:
 
-    ```<pre>
+    <code>
         new JSwiper('className')
         
         new JSwiper('.swiper1',{
@@ -21,7 +21,7 @@
             autoplay:true
         });
 
-    </pre>```    
+    </code>    
     
 
 目前支持配置：
@@ -32,6 +32,6 @@
 
     3.afterSlide {callback function}
 
-* 忽略history版本（太复杂，不好用）；
+* 忽略history版本（太复杂，不好用）*
 
 
