@@ -6,7 +6,7 @@
 
     example:
 
-    <code>
+    `
         new JSwiper('className')
         
         new JSwiper('.swiper1',{
@@ -21,7 +21,7 @@
             autoplay:true
         });
 
-    </code>    
+    `    
     
 
 目前支持配置：
@@ -31,6 +31,7 @@
     2.direction {horizontal/vertical}
 
     3.afterSlide {callback function}
+    
 
 * 忽略history版本（太复杂，不好用）*
 
