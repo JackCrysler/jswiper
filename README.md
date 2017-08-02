@@ -2,13 +2,12 @@
 ===========
 欢迎直接使用simple版本
 ------------
-使用方法
-
-    new JSwiper('className')
+使用方法:
 
     example:
 
-    <pre>
+    `<pre>
+        new JSwiper('className')
         
         new JSwiper('.swiper1',{
             afterSlide:function (index) {
@@ -22,7 +21,7 @@
             autoplay:true
         });
 
-    </pre>    
+    </pre>`    
     
 
 目前支持配置：
