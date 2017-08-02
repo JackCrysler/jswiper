@@ -16,7 +16,7 @@
             direction:'vertical',
             autoplay:true
         });
-        
+
     </code>    
     
 
@@ -28,6 +28,6 @@
 
     3.afterSlide {callback function}
 
-忽略history版本（太复杂，不好用）；
+* 忽略history版本（太复杂，不好用）；
 
 
